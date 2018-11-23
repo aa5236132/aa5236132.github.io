@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="John Doe"><title>pci配置空间 · 杨旭的博客</title><meta name="description" content="PCI配置空间PCI的三种地址空间类型
+I/O空间
+内存地址空间
+PCI配置空间在启动时bootloader或者内核会遍历PCI总线并分配资源，如中断和内存，设备驱动程序通过PCI配置空间找到资源分配。大小为256字节。 配置空间图：
+
+
+Vendor ID寄存器    (RO)
+Vendor ID"><meta name="keywords"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:127px;"><h3 title=""><a href="/">杨旭的博客</a></h3></div></div><ul class="social-links"></ul><div class="footer"><a target="_blank" href="/"><span>Theme by </span></a><a href="https://www.caicai.me"> CaiCai </a><span>&</span><a href="https://github.com/Ben02/hexo-theme-Anatole"> Ben</a><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Proudly published with Hexo&#65281;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">Home</a></li><li><a href="/about">Sobre</a></li><li><a href="/archives">Arquivo</a></li><li><a href="/links">Links</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div><div class="avatar"><img></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a>pci配置空间</a></h3></div><div class="post-content"><h1 id="PCI配置空间"><a href="#PCI配置空间" class="headerlink" title="PCI配置空间"></a>PCI配置空间</h1><h2 id="PCI的三种地址空间类型"><a href="#PCI的三种地址空间类型" class="headerlink" title="PCI的三种地址空间类型"></a>PCI的三种地址空间类型</h2><ul>
+<li>I/O空间</li>
+<li>内存地址空间</li>
+<li>PCI配置空间<br>在启动时bootloader或者内核会遍历PCI总线并分配资源，如中断和内存，设备驱动程序通过PCI配置空间<br>找到资源分配。大小为256字节。 <h2 id="配置空间图："><a href="#配置空间图：" class="headerlink" title="配置空间图："></a>配置空间图：</h2><img src="/2018/11/23/pci/20130930103425784.jpg">
+</li>
+</ul>
+<h3 id="Vendor-ID寄存器-RO"><a href="#Vendor-ID寄存器-RO" class="headerlink" title="Vendor ID寄存器    (RO)"></a>Vendor ID寄存器    (RO)</h3><blockquote>
+<p>Vendor ID代表PCI设备的生产厂商</p>
+</blockquote>
+<p>常见厂商号:</p>
+<ul>
+<li>intel<br>0x8086</li>
+<li>ATI<br>0x1002</li>
+<li>AMD<br>0x1022</li>
+<li>nvidia<br>0x0165</li>
+<li>realtek<br>0x10ec</li>
+</ul>
+<h3 id="Device-ID-RO"><a href="#Device-ID-RO" class="headerlink" title="Device ID    (RO)"></a>Device ID    (RO)</h3><blockquote>
+<p>Device ID 厂商为这个设备分配的设备号</p>
+</blockquote>
+<h2 id="Status-RO"><a href="#Status-RO" class="headerlink" title="Status(RO)"></a>Status(RO)</h2><blockquote>
+<p>该寄存器的绝大多数位都是只读位，保存PCI设备的状态。</p>
+</blockquote>
+<h2 id="Command-WR"><a href="#Command-WR" class="headerlink" title="Command(WR)"></a>Command(WR)</h2><blockquote>
+<p>PCI设备的命令寄存器，</p>
+</blockquote>
+<p>该寄存器在初始化时，其值为0，此时这个PCI 设备除了能够接收配置请求总线事务之外，不能接收任何存储器或者I/O请求。系 统软件需要合理设置该寄存器之后，才能访问该设备的存储器或者I/O空间。</p>
+<h2 id="Revision-ID-RO"><a href="#Revision-ID-RO" class="headerlink" title="Revision ID    (RO)"></a>Revision ID    (RO)</h2><blockquote>
+<p>记载PCI设备的版本号</p>
+</blockquote>
+<h2 id="Class-Code-RO"><a href="#Class-Code-RO" class="headerlink" title="Class Code    (RO)"></a>Class Code    (RO)</h2><blockquote>
+<p>Device ID寄存器的扩展。 </p>
+</blockquote>
+<h2 id="Header-Type-R0"><a href="#Header-Type-R0" class="headerlink" title="Header Type    (R0)"></a>Header Type    (R0)</h2><p>由8位组成。</p>
+<ul>
+<li>BIT7:<br>  -1:当前PCI设备是多功能设备<br>  -0:单功能设备</li>
+<li>BIT[6,0]:当前配置空间的类型<br>  -0:使用PCI Agent设 备的配置空间，一般情况为这种<br>  -1:使用PCI桥的配置空间<br>  -2:使用Cardbus桥片的配置空间，Card Bus桥片使用 </li>
+</ul>
+<h2 id="Base-Address-Register-0-5寄存器"><a href="#Base-Address-Register-0-5寄存器" class="headerlink" title="Base Address Register 0~5寄存器"></a>Base Address Register 0~5寄存器</h2><p>简称为BAR寄存器</p>
+<blockquote>
+<p>BAR寄存器保存PCI设备使用的地址空间的基地址</p>
+</blockquote>
+<p>该基地址保存的是该设备在PCI总线域中的地址。其中每一个设备最多可以有6个<br>基址空间。<br>在PCI设备复位之后，该寄存器将存放PCI设备需要使用的基址空间大小，这段空间是I/O空间还是存储器空间<br>[5]，如果是存储器空间该空间是否可预取，系统软件对PCI总线进行配置时，首先<br>获得BAR寄存器中的初始化信息，之后根据处理器系统的配置，将合理的基地址写<br>入相应的BAR寄存器中。</p>
+<ul>
+<li>获得PCI设备使用的BAR空间的长度:<br>  1.向BAR寄存器写入0xFFFF-FFFF<br>  2.再读取该寄存器。 </li>
+</ul>
+<p>处理器访问PCI设备的BAR空间时，需要使用BAR寄存器提供的基地址。</p>
+<p><strong>注意</strong>：</p>
+<ul>
+<li>处理器使用存储器域的地址，而BAR寄存器存放PCI总线域的地址。</li>
+<li>因此处 理器系统并不能直接使用“BAR寄存器+偏移”的方式访问PCI设备的寄存器空间， 而需要将PCI总线域的地址转换为存储器域的地址。</li>
+<li>如果x86处理器系统使能了 IOMMU后，这两个地址也并不一定相等，因此处理器系统直接使用这个PCI总线<br>域的物理地址，并不能确保访问PCI设备的BAR空间的正确性。</li>
+<li>在Linux系统中，ioremap函数的输入参数为存储器域的物理地址，而不能使用 PCI总线域的物理地址。而在pci_devàresource[bar].start参数中保存的地址已经 经过PCI总线域到存储器域的地址转换，因此在编写Linux系统的设备驱动程序时， 需要使用pci_devàresource[bar].start参数中的物理地址，然后再经过ioremap 函数将物理地址转换为“存储器域”的虚拟地址。 </li>
+</ul>
+<h2 id="Subsystem-Vendor-ID-R0"><a href="#Subsystem-Vendor-ID-R0" class="headerlink" title="Subsystem Vendor ID    (R0)"></a>Subsystem Vendor ID    (R0)</h2><blockquote>
+<p>记录PCI设备的生产厂商</p>
+</blockquote>
+<h2 id="Subsystem-ID-R0"><a href="#Subsystem-ID-R0" class="headerlink" title="Subsystem ID    (R0)"></a>Subsystem ID    (R0)</h2><blockquote>
+<p>记录设备号</p>
+</blockquote>
+<h2 id="Expansion-ROM-base-address"><a href="#Expansion-ROM-base-address" class="headerlink" title="Expansion ROM base address"></a>Expansion ROM base address</h2><p>有些PCI设备在处理器还没有运行操作系统之前，就需要完成基本的初始化设置，<br>比如显卡、键盘和硬盘等设备。为了实现这个“预先执行”功能，PCI设备需要<br>提供一段ROM程序，而处理器在初始化过程中将运行这段ROM程序，初始化这<br>些PCI设备。Expansion ROM base address记载这段ROM程序的基地址。 </p>
+<h2 id="Capabilities-Pointer"><a href="#Capabilities-Pointer" class="headerlink" title="Capabilities Pointer"></a>Capabilities Pointer</h2><p>在PCI设备中，该寄存器是可选的，但是在PCI-X和PCIe设备中必须支持这个寄<br>存器，Capabilities Pointer寄存器存放Capabilities寄存器组的基地址，PCI设<br>备使用Capabilities寄存器组存放一些与PCI设备相关的扩展配置信息。</p>
+<h2 id="Interrupt-Line"><a href="#Interrupt-Line" class="headerlink" title="Interrupt Line"></a>Interrupt Line</h2><p>这个寄存器是系统软件对PCI设备进行配置时写入的，该寄存器记录当前PCI设备<br>使用的中断向量号，设备驱动程序可以通过这个寄存器，判断当前PCI设备使用处<br>理器系统中的哪个中断向量号，并将驱动程序的中断服务例程注册到操作系统中<br>[4]。该寄存器由系统软件初始化，其保存的值与8259A中断控制器相关，该寄存<br>器的值也是由PCI设备与8259A中断控制器的连接关系决定的。如果在一个处理器<br>系统中，没有使用8259A中断控制器管理PCI设备的中断，则该寄存器中的数据并<br>没有意义。在多数PowerPC处理器系统中，并不使用8259A中断控制器管理PCI设<br>备的中断请求，因此该寄存器没有意义。即使在x86处理器系统中，如果使用I/O<br>APIC中断控制器，该寄存器保存的内容仍然无效。目前在绝大多数处理器系统中，<br>并没有使用该寄存器存放PCI设备使用的中断向量号。 </p>
+<h2 id="Interrupt-Pin"><a href="#Interrupt-Pin" class="headerlink" title="Interrupt Pin"></a>Interrupt Pin</h2><p>这个寄存器保存PCI设备使用的中断引脚，PCI总线提供了四个中断引脚INTA#、<br>INTB#、INTC#和INTD#。Interrupt Pin寄存器为1时表示使用INTA#引脚向中<br>断控制器提交中断请求，为2表示使用INTB#，为3表示使用INTC#，为4表示使<br>用INTD#。如果PCI设备只有一个子设备时，该设备只能使用INTA#；如果有多<br>个子设备时，可以使用INTB~D#信号。如果PCI设备不使用这些中断引脚，向处<br>理器提交中断请求时，该寄存器的值必须为0。值得注意的是，虽然在PCIe设备<br>中并不含有INTA~D#信号，但是依然可以使用该寄存器，因为PCIe设备可以使<br>用INTx中断消息，模拟PCI设备的INTA~D#信号.</p>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2018-11-23</span><i class="fa fa-tag"></i></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" href="http://twitter.com/home?status=,http://yoursite.com/2018/11/23/pci/,杨旭的博客,pci配置空间,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="next pagbuttons"><a class="btn" role="navigation" href="/2018/11/22/hello-world/" title="Hello World">Próximo post</a></li></ul></div></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script></body></html>
